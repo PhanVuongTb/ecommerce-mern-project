@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+// import axios from "axios";
 import {
   Row,
   Col,
@@ -11,27 +12,40 @@ import {
 } from "react-bootstrap";
 import Rating from "../../components/Rating";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { listProductDetails } from "../../actions/productActions";
 
 const ProductDetails = ({ match }) => {
+  const dispatch = useDispatch();
+  const productDetails = useSelector((state) => state.productDetails);
+  const { loading, error, product } = productDetails;
+
   const [qty, setQty] = useState(1);
   const history = useNavigate();
   const { id } = useParams();
 
-  const [product, setProduct] = useState([]);
+  // const [product, setProduct] = useState([]);
+
+  // useEffect(() => {
+  //   const fetchProducts = async () => {
+  //     const { data } = await await axios.get(
+  //       "http://localhost:8080/api/products/" + id
+  //     );
+  //     setProduct(data);
+  //     console.log(data);
+  //   };
+  //   fetchProducts();
+  // }, []);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const { data } = await await axios.get(
-        "http://localhost:8080/products/" + id
-      );
-      setProduct(data);
-      // console.log(data);
-    };
-    fetchProducts();
-  }, []);
+    dispatch(listProductDetails(id));
+  }, [dispatch, id]);
 
   const addToCartHandler = () => {
-    history.push(`/cart/${id}?qty=${qty}`);
+    if (history.location.pathname !== "/cart") {
+      history(`/cart/${id}?qty=${qty}`);
+    } else {
+      console.log("Cannot add items to cart on the CartScreen");
+    }
   };
   return (
     <>

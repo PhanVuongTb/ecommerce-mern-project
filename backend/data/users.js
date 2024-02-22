@@ -1,4 +1,4 @@
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 const users = [
   {
     name: "admin",
@@ -17,4 +17,5 @@ const users = [
     password: bcrypt.hashSync("123456", 10),
   },
 ];
+
 module.exports = users;
